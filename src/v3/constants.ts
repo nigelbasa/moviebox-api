@@ -194,7 +194,8 @@ function generateClientInfo(): { userAgent: string; clientInfo: string } {
     { model: "M2012K11AG", brand: "Redmi" },
     { model: "M2007J20CG", brand: "Redmi" }
   ];
-  const versionCodes = [50020042, 50020043, 50020044, 50020045, 50020046];
+  // MovieBox's CDN gates the 3.x line; this is the last confirmed 4.x pair.
+  const versionCodes = [50020125];
   const networkTypes = ["NETWORK_WIFI", "NETWORK_MOBILE"];
   const timezones = [
     "Asia/Kolkata",
@@ -217,7 +218,7 @@ function generateClientInfo(): { userAgent: string; clientInfo: string } {
 
   const clientInfo = JSON.stringify({
     package_name: "com.community.oneroom",
-    version_name: "3.0.03.0529.03",
+    version_name: "4.0.02.0828.03",
     version_code: versionCode,
     os: "android",
     os_version: android.version,

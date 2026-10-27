@@ -117,7 +117,7 @@ export function buildSignedHeaders({
   accept = "application/json",
   contentType = "application/json",
   body,
-  includePlayMode = false,
+  includePlayMode = true,
   authToken,
   clientInfo = CLIENT_INFO,
   userAgent = USER_AGENT

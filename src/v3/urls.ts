@@ -26,6 +26,7 @@ export const SUBJECT_GET_PATH = "/wefeed-mobile-bff/subject-api/get";
 export const SEASON_INFO_PATH = "/wefeed-mobile-bff/subject-api/season-info";
 export const PLAY_INFO_PATH = "/wefeed-mobile-bff/subject-api/play-info";
 export const RESOURCE_PATH = "/wefeed-mobile-bff/subject-api/resource";
+export const RESOURCE_POSITION_V2_PATH = "/wefeed-mobile-bff/subject-api/resource-position/v2";
 export const EXT_CAPTIONS_PATH = "/wefeed-mobile-bff/subject-api/get-ext-captions";
 
 export function mainPageUrl(base: string, page = 1, tabId: string | number = 0): string {

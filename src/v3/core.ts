@@ -32,6 +32,7 @@ import {
   EXT_CAPTIONS_PATH,
   MAIN_PAGE_PATH,
   RESOURCE_PATH,
+  RESOURCE_POSITION_V2_PATH,
   SEARCH_PATH,
   SEARCH_PATH_V2,
   SEASON_INFO_PATH,
@@ -382,7 +383,43 @@ export class DownloadableVideoFilesDetail {
       contents.releaseDate = releaseDate;
     }
 
+    contents.list = await this.unmaskAll(subjectId, contents.list ?? []);
     return contents;
+  }
+
+  // The resource endpoint returns a ~0.8 MB decoy clip (macdn.aoneroom.com) as
+  // resourceLink for unauthenticated clients. Reporting it as failed through
+  // resource-position/v2 yields the real signed CDN link; files whose unmask
+  // fails keep the decoy so callers can still see them and filter by size.
+  private async unmaskAll(
+    subjectId: string,
+    files: VideoFileMetadata[]
+  ): Promise<VideoFileMetadata[]> {
+    return Promise.all(
+      files.map(async (file) => {
+        if (!file.resourceId || !file.resourceLink) return file;
+        try {
+          const data = await this.clientSession.getFromApi<{ list?: VideoFileMetadata[] }>(
+            RESOURCE_POSITION_V2_PATH,
+            {
+              params: {
+                subjectId,
+                resourceId: file.resourceId,
+                failUrl: file.resourceLink,
+                failCode: "404",
+                resourceNum: "0",
+                isVip: "true"
+              }
+            }
+          );
+          const real = data.list?.[0];
+          if (!real?.resourceLink) return file;
+          return { ...file, resourceLink: real.resourceLink, size: Number(real.size ?? file.size) };
+        } catch {
+          return file;
+        }
+      })
+    );
   }
 
   async getContentModel(
